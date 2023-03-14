@@ -4,17 +4,16 @@
  * Author: walnut(覃鹏展)
  * 
  * Description:
- *  定义存储登陆信息的store
+ *  商品：
+ *      1. 用户名
+ *      2. 登录密码
+ *  功能：
+ *      1. 在token过期后，自动发起登录
  * 
  * Copyright (C) 2023 襄阳市中心医院
  *********************************************************/
 
 import { defineStore } from 'pinia'
-import { reactive } from 'vue';
-
-interface UserInfo {
-
-}
 
 export const useUserStore = defineStore('user', {
     state: () => {
@@ -35,6 +34,6 @@ export const useUserStore = defineStore('user', {
         },
         getPassword() {
             return this.password ? this.password : '';
-        },
+        }
     }
 });
