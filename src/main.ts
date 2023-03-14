@@ -16,11 +16,11 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component);
 }
 
-// 角色命令
+// 权限控制逻辑
 const roles = useRolesStore();
 app.directive('role', {
     mounted(el, binding) {
-        if (!roles.hasRole(binding.value)) {
+        if (!roles.isAdministrator() && !roles.hasRole(binding.value)) {
             el['hidden'] = true;
         }
     },

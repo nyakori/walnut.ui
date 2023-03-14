@@ -27,6 +27,9 @@ export const useRolesStore = defineStore('roles', {
         setRoles(roles: string[]) {
             this.roles = roles;
         },
+        isAdministrator() {
+            return this.roles.includes('admin');
+        },
         hasRole(role: string) {
             return this.roles.includes(role);
         }
