@@ -16,15 +16,14 @@ import { defineStore } from 'pinia'
 
 export const useRolesStore = defineStore('roles', {
     state: () => {
+        const rolesString = localStorage.getItem('roles');
         return {
-            roles: <string[]>[]
+            roles: rolesString ? JSON.parse(rolesString) : <string[]>[]
         }
     },
     actions: {
-        clearRoles() {
-            this.roles = <string[]>[];
-        },
         setRoles(roles: string[]) {
+            localStorage.setItem('roles', JSON.stringify(roles));
             this.roles = roles;
         },
         isAdministrator() {

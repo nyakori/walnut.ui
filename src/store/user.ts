@@ -14,24 +14,31 @@
  *********************************************************/
 
 import { defineStore } from 'pinia'
+import { reactive } from 'vue';
+
+interface SignInfo {
+    username: string;
+    password: string;
+}
 
 export const useUserStore = defineStore('user', {
     state: () => {
+        const signInfoString = localStorage.getItem('signInfo');
         return {
-            username: '',
-            password: ''
+            signInfo: signInfoString ? <SignInfo>JSON.parse(signInfoString) : reactive<SignInfo>({ username: '', password: '' })
         }
     },
     actions: {
         setUser(username: string, password: string) {
-            this.username = username;
-            this.password = password;
+            this.signInfo.username = username;
+            this.signInfo.password = password;
+            localStorage.setItem('signInfo', JSON.stringify(this.signInfo));
         },
         getUsername() {
-            return this.username ? this.username : '';
+            return this.signInfo.username;
         },
         getPassword() {
-            return this.password ? this.password : '';
+            return this.signInfo.password;
         }
     }
 });
