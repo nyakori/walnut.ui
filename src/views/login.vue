@@ -63,6 +63,9 @@ const param = reactive<LoginInfo>({
 	password: null
 });
 
+// 定义路由器 - 由于生存期问题, 此定义必须放在外边
+const router = useRouter();
+
 // 表单提交函数
 const submitForm = (formEl: FormInstance | undefined) => {
 	// 表单判空
@@ -81,14 +84,14 @@ const submitForm = (formEl: FormInstance | undefined) => {
 				const { code, message, data } = res.data;
 				switch (code) {
 					case 0:
+						// 读取token
 						const { token } = data;
 
 						// 记录token
 						localStorage.setItem('token', token);
 
 						// 重定向到根目录
-						// const router = useRouter();
-						// router.push('/');
+						router.push('/');
 
 						return;
 
