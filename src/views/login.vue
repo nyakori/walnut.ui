@@ -30,13 +30,13 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { useTagsStore } from '../store/tags';
-import { usePermissStore } from '../store/permiss';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
 import { Lock, User } from '@element-plus/icons-vue';
 import { signIn } from '../api/user'
 import { useUserStore } from '../store/user';
+import { useRolesStore } from '../store/roles';
 
 // el-form节点
 const login = ref<FormInstance>();
@@ -55,12 +55,12 @@ const rules: FormRules = {
 
 // 定义登陆信息
 interface LoginInfo {
-	username: string | null;
-	password: string | null;
+	username: string;
+	password: string;
 }
 const param = reactive<LoginInfo>({
-	username: localStorage.getItem('lastUsername'),
-	password: null
+	username: '',
+	password: ''
 });
 
 // 定义路由器 - 由于生存期问题, 此定义必须放在外边
@@ -74,21 +74,20 @@ const submitForm = (formEl: FormInstance | undefined) => {
 	// 表单校验
 	formEl.validate((valid: boolean) => {
 		if (valid) {
-			// 记录登陆账户及密码
-			const user = useUserStore();
-			user.setUsername(param.username ? param.username : '');
-			user.setPassword(param.password ? param.password : '');
-
 			// 登陆api
-			signIn(user.getUsername(), user.getPassword()).then(res => {
+			signIn(param.username, param.password).then(res => {
 				const { code, message, data } = res.data;
 				switch (code) {
 					case 0:
 						// 读取token
-						const { token } = data;
+						const { roles, token } = data;
 
 						// 记录token
 						localStorage.setItem('token', token);
+
+						// 存放信息商店
+						useUserStore().setUser(param.username, param.password);
+						useRolesStore().setRoles(roles);
 
 						// 重定向到根目录
 						router.push('/');

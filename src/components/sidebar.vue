@@ -1,18 +1,10 @@
 <template>
     <div class="sidebar">
-        <el-menu
-            class="sidebar-el-menu"
-            :default-active="onRoutes"
-            :collapse="sidebar.collapse"
-            background-color="#324157"
-            text-color="#bfcbd9"
-            active-text-color="#20a0ff"
-            unique-opened
-            router
-        >
+        <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="sidebar.collapse" background-color="#324157"
+            text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened router>
             <template v-for="item in items">
                 <template v-if="item.subs">
-                    <el-sub-menu :index="item.index" :key="item.index" v-permiss="item.permiss">
+                    <el-sub-menu :index="item.index" :key="item.index" v-role="item.role">
                         <template #title>
                             <el-icon>
                                 <component :is="item.icon"></component>
@@ -20,25 +12,24 @@
                             <span>{{ item.title }}</span>
                         </template>
                         <template v-for="subItem in item.subs">
-                            <el-sub-menu
-                                v-if="subItem.subs"
-                                :index="subItem.index"
-                                :key="subItem.index"
-                                v-permiss="item.permiss"
-                            >
-                                <template #title>{{ subItem.title }}</template>
-                                <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index">
-                                    {{ threeItem.title }}
+                            <template v-if="subItem.subs">
+                                <el-sub-menu :index="subItem.index" :key="subItem.index" v-role="item.role">
+                                    <template #title>{{ subItem.title }}</template>
+                                    <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index">
+                                        {{ threeItem.title }}
+                                    </el-menu-item>
+                                </el-sub-menu>
+                            </template>
+                            <template v-else>
+                                <el-menu-item :index="subItem.index" :key="subItem.index" v-role="item.role">
+                                    {{ subItem.title }}
                                 </el-menu-item>
-                            </el-sub-menu>
-                            <el-menu-item v-else :index="subItem.index" v-permiss="item.permiss">
-                                {{ subItem.title }}
-                            </el-menu-item>
+                            </template>
                         </template>
                     </el-sub-menu>
                 </template>
                 <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index" v-permiss="item.permiss">
+                    <el-menu-item :index="item.index" :key="item.index" v-role="item.role">
                         <el-icon>
                             <component :is="item.icon"></component>
                         </el-icon>
@@ -60,67 +51,56 @@ const items = [
         icon: 'Odometer',
         index: '/dashboard',
         title: '系统首页',
-        permiss: '1',
+        role: 'user'
     },
     {
         icon: 'Calendar',
         index: '1',
         title: '表格相关',
-        permiss: '2',
         subs: [
             {
                 index: '/table',
-                title: '常用表格',
-                permiss: '2',
+                title: '常用表格'
             },
             {
                 index: '/import',
-                title: '导入Excel',
-                permiss: '2',
+                title: '导入Excel'
             },
             {
                 index: '/export',
-                title: '导出Excel',
-                permiss: '2',
+                title: '导出Excel'
             },
         ],
     },
     {
         icon: 'DocumentCopy',
         index: '/tabs',
-        title: 'tab选项卡',
-        permiss: '3',
+        title: 'tab选项卡'
     },
     {
         icon: 'Edit',
         index: '3',
         title: '表单相关',
-        permiss: '4',
         subs: [
             {
                 index: '/form',
-                title: '基本表单',
-                permiss: '5',
+                title: '基本表单'
             },
             {
                 index: '/upload',
-                title: '文件上传',
-                permiss: '6',
+                title: '文件上传'
             },
             {
                 index: '4',
                 title: '三级菜单',
-                permiss: '7',
                 subs: [
                     {
                         index: '/editor',
-                        title: '富文本编辑器',
-                        permiss: '8',
+                        title: '富文本编辑器'
                     },
                     {
                         index: '/markdown',
-                        title: 'markdown编辑器',
-                        permiss: '9',
+                        title: 'markdown编辑器'
                     },
                 ],
             },
@@ -129,26 +109,22 @@ const items = [
     {
         icon: 'Setting',
         index: '/icon',
-        title: '自定义图标',
-        permiss: '10',
+        title: '自定义图标'
     },
     {
         icon: 'PieChart',
         index: '/charts',
-        title: 'schart图表',
-        permiss: '11',
+        title: 'schart图表'
     },
     {
         icon: 'Warning',
         index: '/permission',
-        title: '权限管理',
-        permiss: '13',
+        title: '权限管理'
     },
     {
         icon: 'CoffeeCup',
         index: '/donate',
-        title: '支持作者',
-        permiss: '14',
+        title: '支持作者'
     },
 ];
 
@@ -169,13 +145,16 @@ const sidebar = useSidebarStore();
     bottom: 0;
     overflow-y: scroll;
 }
+
 .sidebar::-webkit-scrollbar {
     width: 0;
 }
+
 .sidebar-el-menu:not(.el-menu--collapse) {
     width: 250px;
 }
-.sidebar > ul {
+
+.sidebar>ul {
     height: 100%;
 }
 </style>

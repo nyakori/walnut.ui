@@ -23,14 +23,12 @@ export const useUserStore = defineStore('user', {
         }
     },
     actions: {
-        setUsername(username: string) {
+        setUser(username: string, password: string) {
             this.username = username;
+            this.password = password;
         },
         getUsername() {
             return this.username ? this.username : '';
-        },
-        setPassword(password: string) {
-            this.password = password;
         },
         getPassword() {
             return this.password ? this.password : '';
